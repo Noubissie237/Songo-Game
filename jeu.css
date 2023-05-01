@@ -1,0 +1,22 @@
+table
+{
+    width: 100%;
+   /* margin: 20% 28%;*/
+}
+
+.pions, .vide
+{
+    width: 100%;
+}
+
+.pions
+{
+    background-color: #6f8683;
+    border: 5px solid #8c6f4d;
+}
+
+input
+{
+    border: 0px;
+    background-color: #fff;
+}
