@@ -36,9 +36,38 @@ class Songo
                 return 1
     }
 
-    distribution(idj) // prototype permettant d'effectuer la distribution des pions par le joueur dont l'id est passé en paramettre
+    distribution(idj, Case) // prototype permettant d'effectuer la distribution des pions par le joueur dont l'id est passé en paramettre
     {
-        
+        let tmp = document.getElementById("J"+idj+"pionsCase"+Case).value
+        if(idj==1 && Case==7 && tmp==1)
+        {
+            alert("Vous ne pouvez pas jouer cette case !");
+        }
+        else
+        {
+            let idc; //id du joueur contraire
+            if(idj == 1)
+                idc = 2
+            else
+                idc = 1
+            document.getElementById("J"+idj+"pionsCase"+Case).value = 0;
+            let progressCase = Case;
+            let debC = 1
+            while(tmp > 0)
+            {
+                if(progressCase >= 0)
+                {
+                    document.getElementById("J"+idj+"pionsCase"+progressCase).value = eval(document.getElementById("J"+idj+"pionsCase"+progressCase).value + 1);
+                    progressCase -= 1;
+                }
+                else
+                {
+                    document.getElementById("J"+idc+"pionsCase"+debC).value = eval(document.getElementById("J"+idc+"pionsCase"+debC).value + 1);
+                    debC += 1;
+                }
+                tmp -= 1;
+            }
+        }
     }
 
 }
@@ -51,9 +80,56 @@ function init()
 
     for(let j = 1; j <= 2; j++)
         for(let i = 1; i<= 7; i++)
+        {
             document.getElementById("J"+j+"pionsCase"+i).value = 5
-    
+            document.getElementById("J"+j+"pions"+i).value = 5
+        }
+            
 }
+
+function distribution(idj, Case) // prototype permettant d'effectuer la distribution des pions par le joueur dont l'id est passé en paramettre
+{
+    let tmp = document.getElementById("J"+idj+"pionsCase"+Case).value;
+    if((idj==1 && Case==7 && tmp==1) || (idj==2 && Case==1 && tmp==1))
+    {
+        alert("Vous ne pouvez pas jouer cette case !");
+    }
+    else
+    {
+        let idc; //id du joueur contraire
+        if(idj == 1)
+            idc = 2
+        else
+            idc = 1
+
+        document.getElementById("J"+idj+"pionsCase"+Case).value = 0;
+        document.getElementById("J"+idj+"pions"+Case).value = 0
+        let progressCase = Case;
+        let debC = 1
+        if(idj == 2)
+        {
+            while(tmp > 0)
+            {
+                if(progressCase >= 0)
+                {
+                    document.getElementById("J"+idj+"pionsCase"+(progressCase-1)).value = eval(document.getElementById("J"+idj+"pionsCase"+(progressCase-1)).value + '+' + 1);
+                    document.getElementById("J"+idj+"pions"+(progressCase-1)).value =  document.getElementById("J"+idj+"pionsCase"+(progressCase-1)).value 
+                    progressCase -= 1;
+                }
+                else
+                {
+                    document.getElementById("J"+idc+"pionsCase"+debC).value = eval(document.getElementById("J"+idc+"pionsCase"+debC).value + '+' + 1);
+                    document.getElementById("J"+idj+"pions"+debC).value = document.getElementById("J"+idc+"pionsCase"+debC).value
+                    debC += 1;
+                }
+                tmp -= 1;
+            }
+        }
+
+    }
+}
+
+
 
 /*function debut()
 {
