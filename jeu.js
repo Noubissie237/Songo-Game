@@ -1,6 +1,5 @@
-
-let permission1 = 0 // permission de jouer du joueur 1, il est donc le deuxieme a jouer
-let permission2 = 1 // permission de jouer du joueur 2, il est donc le premier a jouer
+let permission1 = true // permission de jouer du joueur 1, il est donc le premier a jouer
+let permission2 = false // permission de jouer du joueur 2, il est donc le deuxieme a jouer
 
 class Songo
 {
@@ -22,56 +21,27 @@ class Songo
             return -1
     }
 
-    estBloque(idj)  // prototype permettant de savoir si le joueur dont l'id est passé en paramettre est bloqué en retournant 0 ou pas en retournant 1
-    {
-        if(idj == 1)
-            if(permission1 == 0)
-                return 0
-            else
-                return 1
-        else
-            if(permission2 == 0)
-                return 0
-            else
-                return 1
-    }
-
-    distribution(idj, Case) // prototype permettant d'effectuer la distribution des pions par le joueur dont l'id est passé en paramettre
-    {
-        let tmp = document.getElementById("J"+idj+"pionsCase"+Case).value
-        if(idj==1 && Case==7 && tmp==1)
-        {
-            alert("Vous ne pouvez pas jouer cette case !");
-        }
-        else
-        {
-            let idc; //id du joueur contraire
-            if(idj == 1)
-                idc = 2
-            else
-                idc = 1
-            document.getElementById("J"+idj+"pionsCase"+Case).value = 0;
-            let progressCase = Case;
-            let debC = 1
-            while(tmp > 0)
-            {
-                if(progressCase >= 0)
-                {
-                    document.getElementById("J"+idj+"pionsCase"+progressCase).value = eval(document.getElementById("J"+idj+"pionsCase"+progressCase).value + 1);
-                    progressCase -= 1;
-                }
-                else
-                {
-                    document.getElementById("J"+idc+"pionsCase"+debC).value = eval(document.getElementById("J"+idc+"pionsCase"+debC).value + 1);
-                    debC += 1;
-                }
-                tmp -= 1;
-            }
-        }
-    }
-
 }
 
+function estBloque(idj)  // prototype permettant de savoir si le joueur dont l'id est passé en paramettre est bloqué en retournant 0 ou pas en retournant 1
+{
+    if((idj == 1) && (permission1))
+    {
+        permission1 = false
+        permission2 = true
+        return 0
+    }
+    else if((idj == 1) && (!permission1))
+        return 1
+    else if((idj == 2) && (permission2))
+    {
+        permission1 = true
+        permission2 = false
+        return 0
+    }
+    else if((idj == 2) && (!permission2))
+        return 1
+}
 
 function init()
 {
@@ -89,66 +59,182 @@ function init()
 
 function distribution(idj, Case) // prototype permettant d'effectuer la distribution des pions par le joueur dont l'id est passé en paramettre
 {
-    let tmp = document.getElementById("J"+idj+"pionsCase"+Case).value;
-    if((idj==1 && Case==7 && tmp==1) || (idj==2 && Case==1 && tmp==1))
+    if(estBloque(idj) == 0)
     {
-        alert("Vous ne pouvez pas jouer cette case !");
+        let tmp = document.getElementById("J"+idj+"pionsCase"+Case).value;
+        let rappel = tmp;
+        let checkPrise = false
+        let checkPrise1 = false
+        if((idj==1 && Case==7 && tmp==1) || (idj==2 && Case==1 && tmp==1))
+        {
+            alert("Vous ne pouvez pas jouer cette case !");
+        }
+        else
+        {
+            let idc; //id du joueur contraire
+            if(idj == 1)
+                idc = 2
+            else
+                idc = 1
+    
+            document.getElementById("J"+idj+"pionsCase"+Case).value = 0;
+            document.getElementById("J"+idj+"pions"+Case).value = 0
+            let progressCase = Case;
+            if(idj == 2)
+            {
+                let debC = 1
+                while(tmp > 0)
+                {
+                    
+                    if(progressCase > 1)
+                    {
+                        document.getElementById("J"+idj+"pionsCase"+(progressCase-1)).value = eval(document.getElementById("J"+idj+"pionsCase"+(progressCase-1)).value + '+' + 1);
+                        document.getElementById("J"+idj+"pions"+(progressCase-1)).value =  document.getElementById("J"+idj+"pionsCase"+(progressCase-1)).value 
+                        progressCase -= 1;
+                    }
+                    else
+                    {
+                        checkPrise = true
+                        document.getElementById("J"+idc+"pionsCase"+debC).value = eval(document.getElementById("J"+idc+"pionsCase"+debC).value + '+' + 1);
+                        document.getElementById("J"+idc+"pions"+debC).value = document.getElementById("J"+idc+"pionsCase"+debC).value
+                        debC += 1;
+                        if(debC > 7)
+                        {
+                            let newInd = 7
+                            if(rappel <= 13)
+                            {
+                                while (tmp > 0)
+                                {
+                                    document.getElementById("J"+idj+"pionsCase"+newInd).value  = eval(document.getElementById("J"+idj+"pionsCase"+newInd).value  + '+' + 1);
+                                    document.getElementById("J"+idj+"pions"+newInd).value      = eval(document.getElementById("J"+idj+"pions"+newInd).value      + '+' + 1);
+                                    newInd -= 1
+                                    tmp-=1
+                                }
+                            }
+
+                        }
+                    }
+                    tmp -= 1;
+                }
+                if(checkPrise)
+                {
+                    prise((debC-1),idj,idc)
+                }
+            }
+            else
+            {
+                let debC = 7
+                while(tmp > 0)
+                {
+                    
+                    if(progressCase < 7)
+                    {
+                        document.getElementById("J"+idj+"pionsCase"+(progressCase+1)).value = eval(document.getElementById("J"+idj+"pionsCase"+(progressCase+1)).value + '+' + 1);
+                        document.getElementById("J"+idj+"pions"+(progressCase+1)).value =  document.getElementById("J"+idj+"pionsCase"+(progressCase+1)).value 
+                        progressCase += 1;
+                    }
+                    else
+                    {
+                        checkPrise1 = true
+                        document.getElementById("J"+idc+"pionsCase"+debC).value = eval(document.getElementById("J"+idc+"pionsCase"+debC).value + '+' + 1);
+                        document.getElementById("J"+idc+"pions"+debC).value = document.getElementById("J"+idc+"pionsCase"+debC).value
+                        debC -= 1;
+                        if(debC < 1)
+                        {
+                            let newInd = 1
+                            if(rappel <= 13)
+                            {
+                                while (tmp > 0)
+                                {
+                                    document.getElementById("J"+idj+"pionsCase"+newInd).value  = eval(document.getElementById("J"+idj+"pionsCase"+newInd).value  + '+' + 1);
+                                    document.getElementById("J"+idj+"pions"+newInd).value      = eval(document.getElementById("J"+idj+"pions"+newInd).value      + '+' + 1);
+                                    newInd += 1
+                                    tmp-=1
+                                }
+                            }
+
+                        }
+                    }
+                    tmp -= 1;
+                }
+                if(checkPrise1)
+                {
+                    prise((debC+1),idj,idc)
+                }
+            }
+    
+        }
+    }
+}
+
+function prise(lastCase,idj,idc)
+{
+    if(idc == 1)
+    {
+        for(let i = 1; i <= lastCase; i+=1)
+        {
+            checkPions = document.getElementById("J"+idc+"pions"+i).value;
+            if((checkPions == 2) || (checkPions == 3) || (checkPions == 4))
+            {
+                document.getElementById("PointJoueur"+idj).value = eval(document.getElementById("PointJoueur"+idj).value + '+' + checkPions)
+                document.getElementById("J"+idc+"pions"+i).value = 0
+                document.getElementById("J"+idc+"pionsCase"+i).value = 0
+            }
+        
+        }
     }
     else
     {
-        let idc; //id du joueur contraire
-        if(idj == 1)
-            idc = 2
-        else
-            idc = 1
-
-        document.getElementById("J"+idj+"pionsCase"+Case).value = 0;
-        document.getElementById("J"+idj+"pions"+Case).value = 0
-        let progressCase = Case;
-        let debC = 1
-        if(idj == 2)
+        for(let i = lastCase; i <= 7; i+=1)
         {
-            while(tmp > 0)
+            checkPions = document.getElementById("J"+idc+"pions"+i).value;
+            if((checkPions == 2) || (checkPions == 3) || (checkPions == 4))
             {
-                if(progressCase >= 0)
-                {
-                    document.getElementById("J"+idj+"pionsCase"+(progressCase-1)).value = eval(document.getElementById("J"+idj+"pionsCase"+(progressCase-1)).value + '+' + 1);
-                    document.getElementById("J"+idj+"pions"+(progressCase-1)).value =  document.getElementById("J"+idj+"pionsCase"+(progressCase-1)).value 
-                    progressCase -= 1;
-                }
-                else
-                {
-                    document.getElementById("J"+idc+"pionsCase"+debC).value = eval(document.getElementById("J"+idc+"pionsCase"+debC).value + '+' + 1);
-                    document.getElementById("J"+idj+"pions"+debC).value = document.getElementById("J"+idc+"pionsCase"+debC).value
-                    debC += 1;
-                }
-                tmp -= 1;
+                document.getElementById("PointJoueur"+idj).value = eval(document.getElementById("PointJoueur"+idj).value + '+' + checkPions)
+                document.getElementById("J"+idc+"pions"+i).value = 0
+                document.getElementById("J"+idc+"pionsCase"+i).value = 0
             }
+        
         }
-
+    }
+    if((poursuiteJeu() == 1) || (poursuiteJeu() == 2))
+    {
+        alert("Fin de la partie, victoire du joueur "+poursuiteJeu())
     }
 }
 
-
-
-/*function debut()
+function poursuiteJeu()
 {
-    const canvas = document.querySelector("canvas");
-    const ctx = canvas.getContext("2d");
-    const Largeur = 900;
-    const Longueur = 50;
+    a = document.getElementById("PointJoueur1").value;
+    b = document.getElementById("PointJoueur2").value;
 
-    ctx.fillRect(0,0,Largeur,Longueur)
+    let som1 = 0
+    let som2 = 0
 
-
-function loadDoc() {
-    var xhttp = new XMLHttpRequest();
-    xhttp.onreadystatechange = function() {
-    if (this.readyState == 4 && this.status == 200) {
-    document.getElementById("demo").innerHTML = this.responseText;
+    for(let i = 1; i<= 7; i++)
+    {
+        som1 += document.getElementById("J1pions"+i).value;
+        som2 += document.getElementById("J2pions"+i).value;
     }
-    };
-    xhttp.open("GET", "ajax_info.txt", true);
-    xhttp.send();
+
+    if((som1 + som2) < 10)
+    {
+        if((som1 + a) > 35)
+            return 1
+    
+        if((som2 + b) > 35) 
+            return 2
+    }
+    
+    if((a<=35) && (b<=35))
+        return 0
+
+    if(a>35 || b>35)
+    {
+        permission1 = false
+        permission2 = false
+        if(a>35)
+            return 1
+        return 2
+    }
 }
-}*/
