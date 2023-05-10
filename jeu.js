@@ -1,5 +1,5 @@
-let permission1 = true // permission de jouer du joueur 1, il est donc le premier a jouer
-let permission2 = false // permission de jouer du joueur 2, il est donc le deuxieme a jouer
+var permission1 = true // permission de jouer du joueur 1, il est donc le premier a jouer
+var permission2 = false // permission de jouer du joueur 2, il est donc le deuxieme a jouer
 
 class Songo
 {
@@ -48,8 +48,8 @@ function init()
     document.getElementById("PointJoueur1").value = 0
     document.getElementById("PointJoueur2").value = 0
 
-    for(let j = 1; j <= 2; j++)
-        for(let i = 1; i<= 7; i++)
+    for(var j = 1; j <= 2; j++)
+        for(var i = 1; i<= 7; i++)
         {
             document.getElementById("J"+j+"pionsCase"+i).value = 5
             document.getElementById("J"+j+"pions"+i).value = 5
@@ -61,17 +61,17 @@ function distribution(idj, Case) // prototype permettant d'effectuer la distribu
 {
     if(estBloque(idj) == 0)
     {
-        let tmp = document.getElementById("J"+idj+"pionsCase"+Case).value;
-        let rappel = tmp;
-        let checkPrise = false
-        let checkPrise1 = false
+        var tmp = document.getElementById("J"+idj+"pionsCase"+Case).value;
+        var rappel = tmp;
+        var checkPrise = false
+        var checkPrise1 = false
         if((idj==1 && Case==7 && tmp==1) || (idj==2 && Case==1 && tmp==1))
         {
             alert("Vous ne pouvez pas jouer cette case !");
         }
         else
         {
-            let idc; //id du joueur contraire
+            var idc; //id du joueur contraire
             if(idj == 1)
                 idc = 2
             else
@@ -79,10 +79,10 @@ function distribution(idj, Case) // prototype permettant d'effectuer la distribu
     
             document.getElementById("J"+idj+"pionsCase"+Case).value = 0;
             document.getElementById("J"+idj+"pions"+Case).value = 0
-            let progressCase = Case;
+            var progressCase = Case;
             if(idj == 2)
             {
-                let debC = 1
+                var debC = 1
                 while(tmp > 0)
                 {
                     
@@ -100,7 +100,7 @@ function distribution(idj, Case) // prototype permettant d'effectuer la distribu
                         debC += 1;
                         if(debC > 7)
                         {
-                            let newInd = 7
+                            var newInd = 7
                             if(rappel <= 13)
                             {
                                 while (tmp > 0)
@@ -123,7 +123,7 @@ function distribution(idj, Case) // prototype permettant d'effectuer la distribu
             }
             else
             {
-                let debC = 7
+                var debC = 7
                 while(tmp > 0)
                 {
                     
@@ -141,7 +141,7 @@ function distribution(idj, Case) // prototype permettant d'effectuer la distribu
                         debC -= 1;
                         if(debC < 1)
                         {
-                            let newInd = 1
+                            var newInd = 1
                             if(rappel <= 13)
                             {
                                 while (tmp > 0)
@@ -169,13 +169,19 @@ function distribution(idj, Case) // prototype permettant d'effectuer la distribu
 
 function prise(lastCase,idj,idc)
 {
+    var avance = true
+
     if(idc == 1)
     {
-        for(let i = 1; i <= lastCase; i+=1)
+        for( i = lastCase; i >= 1; i--)
         {
             checkPions = document.getElementById("J"+idc+"pions"+i).value;
-            if((checkPions == 2) || (checkPions == 3) || (checkPions == 4))
+            if((checkPions != 2) && (checkPions != 3) && (checkPions != 4))
             {
+                avance = false
+            }
+            if(avance)
+            {                
                 document.getElementById("PointJoueur"+idj).value = eval(document.getElementById("PointJoueur"+idj).value + '+' + checkPions)
                 document.getElementById("J"+idc+"pions"+i).value = 0
                 document.getElementById("J"+idc+"pionsCase"+i).value = 0
@@ -185,10 +191,14 @@ function prise(lastCase,idj,idc)
     }
     else
     {
-        for(let i = lastCase; i <= 7; i+=1)
+        for(var i = lastCase; i <= 7; i+=1)
         {
             checkPions = document.getElementById("J"+idc+"pions"+i).value;
-            if((checkPions == 2) || (checkPions == 3) || (checkPions == 4))
+            if((checkPions != 2) && (checkPions != 3) && (checkPions != 4))
+            {
+                avance = false
+            }
+            if(avance)
             {
                 document.getElementById("PointJoueur"+idj).value = eval(document.getElementById("PointJoueur"+idj).value + '+' + checkPions)
                 document.getElementById("J"+idc+"pions"+i).value = 0
@@ -208,10 +218,10 @@ function poursuiteJeu()
     a = document.getElementById("PointJoueur1").value;
     b = document.getElementById("PointJoueur2").value;
 
-    let som1 = 0
-    let som2 = 0
+    var som1 = 0
+    var som2 = 0
 
-    for(let i = 1; i<= 7; i++)
+    for(var i = 1; i<= 7; i++)
     {
         som1 += document.getElementById("J1pions"+i).value;
         som2 += document.getElementById("J2pions"+i).value;
