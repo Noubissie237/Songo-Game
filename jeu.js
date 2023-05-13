@@ -152,6 +152,13 @@ function distribution(idj, Case) // prototype permettant d'effectuer la distribu
                                     tmp-=1
                                 }
                             }
+                           /* else
+                            {
+                                while (tmp > 0)
+                                {
+
+                                }
+                            }*/
 
                         }
                     }
