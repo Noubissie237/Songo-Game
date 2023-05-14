@@ -1,3 +1,8 @@
+body
+{
+    background-color: cadetblue;
+}
+
 table
 {
     width: 100%;
@@ -12,16 +17,24 @@ table
 {
     background-color: #6f8683;
     border: 5px solid #8c6f4d;
+    font-size: 20px;
 }
 
 input
 {
     border: 0px;
-    background-color: #fff;
+    background-color: cadetblue;
 }
 
 .pions:hover
 {
-    background-color:#a2f1a2;
+    background-color:#3b503b;
 }
 
+.user
+{
+    background-color: #a2f1a2;
+    font-size: 30px;
+    font-variant: small-caps;
+    border-radius: 9px;
+}

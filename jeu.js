@@ -1,5 +1,5 @@
-var permission1 = true // permission de jouer du joueur 1, il est donc le premier a jouer
-var permission2 = false // permission de jouer du joueur 2, il est donc le deuxieme a jouer
+var permission1 = false // permission de jouer du joueur 1, il est donc le deuxieme a jouer
+var permission2 = true // permission de jouer du joueur 2, il est donc le premier a jouer
 
 class Songo
 {
@@ -176,6 +176,13 @@ function distribution(idj, Case) // prototype permettant d'effectuer la distribu
     
         }
     }
+    if(idj == 2)
+    {
+        var a = Math.round(Math.random()*6)+1;
+        setTimeout(function(){
+            distribution(1,a)
+        }, 2000)
+    }
 }
 
 function prise(lastCase,idj,idc)
@@ -218,10 +225,12 @@ function prise(lastCase,idj,idc)
         
         }
     }
-    if((poursuiteJeu() == 1) || (poursuiteJeu() == 2))
+    if(poursuiteJeu() == 1)
     {
-        alert("Fin de la partie, victoire du joueur "+poursuiteJeu())
+        alert("Vous avez perdu !!")
     }
+    else if(poursuiteJeu() == 2)
+        alert("Vous avez gagnez")
 }
 
 function poursuiteJeu()
