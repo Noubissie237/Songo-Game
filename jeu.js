@@ -152,13 +152,17 @@ function distribution(idj, Case) // prototype permettant d'effectuer la distribu
                                     tmp-=1
                                 }
                             }
-                           /* else
+                            else
                             {
+                                debC = 1;
                                 while (tmp > 0)
                                 {
-
+                                    checkPrise1 = true
+                                    document.getElementById("J"+idc+"pionsCase"+debC).value = eval(document.getElementById("J"+idc+"pionsCase"+debC).value + '+' + 1);
+                                    document.getElementById("J"+idc+"pions"+debC).value = document.getElementById("J"+idc+"pionsCase"+debC).value   
+                                    debC += 1         
                                 }
-                            }*/
+                            }
 
                         }
                     }
