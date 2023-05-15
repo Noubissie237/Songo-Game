@@ -43,24 +43,86 @@ function estBloque(idj)  // prototype permettant de savoir si le joueur dont l'i
         return 1
 }
 
+function affiche1(idj,idcase)
+{
+    if(idcase <= 7)
+    {
+        var xhttp = new XMLHttpRequest();
+    
+        xhttp.onreadystatechange = function()
+        {
+            if(this.readyState == 4 && this.status == 200)
+            {
+                document.getElementById("J"+idj+"pionsCase"+(idcase-1)).value = this.response;
+                document.getElementById("J"+idj+"pions"+(idcase-1)).value = this.response;
+            }
+        };
+    
+        xhttp.open('GET', 'affichePoints.php?val='+idcase, true);
+        xhttp.send();
+
+        idcase += 1;
+
+        affiche1(idj, idcase);
+    }
+}
+
+function affiche2(idj,idcase)
+{
+    if(idcase <= 7)
+    {
+        var xhttp = new XMLHttpRequest();
+    
+        xhttp.onreadystatechange = function()
+        {
+            if(this.readyState == 4 && this.status == 200)
+            {
+                document.getElementById("J"+idj+"pionsCase"+(idcase-1)).value = this.response;
+                document.getElementById("J"+idj+"pions"+(idcase-1)).value = this.response;
+            }
+        };
+    
+        xhttp.open('GET', 'affichePoints2.php?val='+idcase, true);
+        xhttp.send();
+
+        idcase += 1;
+
+        affiche2(idj, idcase);
+    }
+}
+
+function score(id)
+{
+    var xhttp = new XMLHttpRequest();
+
+    xhttp.onreadystatechange = function()
+    {
+        if(this.readyState == 4 && this.status == 200)
+        {
+            document.getElementById("PointJoueur"+id).value = this.response;
+        }
+    };
+
+    xhttp.open("GET", "score.php?val="+id, true);
+    xhttp.send();
+}
+
 function init()
 {
-    document.getElementById("PointJoueur1").value = 0
-    document.getElementById("PointJoueur2").value = 0
-
-    for(var j = 1; j <= 2; j++)
-        for(var i = 1; i<= 7; i++)
-        {
-            document.getElementById("J"+j+"pionsCase"+i).value = 5
-            document.getElementById("J"+j+"pions"+i).value = 5
-        }
-            
+    var idcase1 = 1;
+    var idcase2 = 1;
+    affiche1(1,idcase1);
+    affiche2(2,idcase2);
+    score(1);
+    score(2);
 }
 
 function distribution(idj, Case) // prototype permettant d'effectuer la distribution des pions par le joueur dont l'id est passé en paramettre
 {
+
     if(estBloque(idj) == 0)
     {
+
         var tmp = document.getElementById("J"+idj+"pionsCase"+Case).value;
         var rappel = tmp;
         var checkPrise = false
@@ -173,9 +235,10 @@ function distribution(idj, Case) // prototype permettant d'effectuer la distribu
                     prise((debC+1),idj,idc)
                 }
             }
-    
+            init();
         }
     }
+   
 }
 
 function prise(lastCase,idj,idc)
