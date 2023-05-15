@@ -1,5 +1,5 @@
-var permission1 = true // permission de jouer du joueur 1, il est donc le premier a jouer
-var permission2 = false // permission de jouer du joueur 2, il est donc le deuxieme a jouer
+var permission1 = false // permission de jouer du joueur 1, il est donc le premier a jouer
+var permission2 = true // permission de jouer du joueur 2, il est donc le deuxieme a jouer
 
 class Songo
 {
@@ -117,12 +117,19 @@ function init()
     score(2);
 }
 
+function init1()
+{
+    /*setInterval(function(){
+        init()
+    },100);*/
+    init();
+}
 function distribution(idj, Case) // prototype permettant d'effectuer la distribution des pions par le joueur dont l'id est passé en paramettre
 {
 
     if(estBloque(idj) == 0)
     {
-
+        var xhttp = new XMLHttpRequest();
         var tmp = document.getElementById("J"+idj+"pionsCase"+Case).value;
         var rappel = tmp;
         var checkPrise = false
@@ -138,50 +145,31 @@ function distribution(idj, Case) // prototype permettant d'effectuer la distribu
                 idc = 2
             else
                 idc = 1
-    
-            document.getElementById("J"+idj+"pionsCase"+Case).value = 0;
-            document.getElementById("J"+idj+"pions"+Case).value = 0
+            //document.getElementById("J"+idj+"pionsCase"+Case).value = 0;
+            //document.getElementById("J"+idj+"pions"+Case).value = 0
             var progressCase = Case;
             if(idj == 2)
             {
                 var debC = 1
-                while(tmp > 0)
+                if(progressCase == 1)
                 {
-                    
-                    if(progressCase > 1)
-                    {
-                        document.getElementById("J"+idj+"pionsCase"+(progressCase-1)).value = eval(document.getElementById("J"+idj+"pionsCase"+(progressCase-1)).value + '+' + 1);
-                        document.getElementById("J"+idj+"pions"+(progressCase-1)).value =  document.getElementById("J"+idj+"pionsCase"+(progressCase-1)).value 
-                        progressCase -= 1;
-                    }
-                    else
-                    {
-                        checkPrise = true
-                        document.getElementById("J"+idc+"pionsCase"+debC).value = eval(document.getElementById("J"+idc+"pionsCase"+debC).value + '+' + 1);
-                        document.getElementById("J"+idc+"pions"+debC).value = document.getElementById("J"+idc+"pionsCase"+debC).value
-                        debC += 1;
-                        if(debC > 7)
-                        {
-                            var newInd = 7
-                            if(rappel <= 13)
-                            {
-                                while (tmp > 0)
-                                {
-                                    document.getElementById("J"+idj+"pionsCase"+newInd).value  = eval(document.getElementById("J"+idj+"pionsCase"+newInd).value  + '+' + 1);
-                                    document.getElementById("J"+idj+"pions"+newInd).value      = eval(document.getElementById("J"+idj+"pions"+newInd).value      + '+' + 1);
-                                    newInd -= 1
-                                    tmp-=1
-                                }
-                            }
-
-                        }
-                    }
-                    tmp -= 1;
+                    xhttp.open("GET","insertEvol2_0.php?val="+tmp, true);
+                    xhttp.send();
+                }
+                else
+                {
+                    xhttp.open("GET","insertEvol2_"+(progressCase-1)+".php?val="+tmp, true);
+                    xhttp.send();
+                }
+                
+               /* xhttp.onreadystatechange = function(){
+                    if(this.readyState == 4 && this.status == 200)
+                        checkPrise = this.response;
                 }
                 if(checkPrise)
                 {
                     prise((debC-1),idj,idc)
-                }
+                }*/
             }
             else
             {
