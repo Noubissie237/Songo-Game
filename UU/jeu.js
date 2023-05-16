@@ -149,7 +149,7 @@ function distribution(idj, Case) // prototype permettant d'effectuer la distribu
             var progressCase = Case;
             if(idj == 2)
             {
-                var debC = 1
+                var debC = 1;
 
                     xhttp.open("GET","insertEvol2_"+(progressCase-1)+".php?val="+tmp, true);
                     xhttp.send();
