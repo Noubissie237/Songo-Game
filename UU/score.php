@@ -7,5 +7,5 @@
 
     foreach($req as $nbre)
     {
-        echo $nbre['score'];
+        echo $nbre['scores'];
     }

@@ -119,7 +119,7 @@ function init()
 
 function init1()
 {
-    /*setInterval(function(){
+   /*setInterval(function(){
         init()
     },100);*/
     init();
@@ -145,31 +145,15 @@ function distribution(idj, Case) // prototype permettant d'effectuer la distribu
                 idc = 2
             else
                 idc = 1
-            //document.getElementById("J"+idj+"pionsCase"+Case).value = 0;
-            //document.getElementById("J"+idj+"pions"+Case).value = 0
+
             var progressCase = Case;
             if(idj == 2)
             {
                 var debC = 1
-                if(progressCase == 1)
-                {
-                    xhttp.open("GET","insertEvol2_0.php?val="+tmp, true);
-                    xhttp.send();
-                }
-                else
-                {
+
                     xhttp.open("GET","insertEvol2_"+(progressCase-1)+".php?val="+tmp, true);
                     xhttp.send();
-                }
                 
-               /* xhttp.onreadystatechange = function(){
-                    if(this.readyState == 4 && this.status == 200)
-                        checkPrise = this.response;
-                }
-                if(checkPrise)
-                {
-                    prise((debC-1),idj,idc)
-                }*/
             }
             else
             {
@@ -223,7 +207,7 @@ function distribution(idj, Case) // prototype permettant d'effectuer la distribu
                     prise((debC+1),idj,idc)
                 }
             }
-            init();
+            //init();
         }
     }
    
