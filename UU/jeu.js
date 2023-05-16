@@ -1,5 +1,5 @@
-var permission1 = false // permission de jouer du joueur 1, il est donc le premier a jouer
-var permission2 = true // permission de jouer du joueur 2, il est donc le deuxieme a jouer
+var permission1 = true // permission de jouer du joueur 1, il est donc le premier a jouer
+var permission2 = false // permission de jouer du joueur 2, il est donc le deuxieme a jouer
 
 class Songo
 {
@@ -119,10 +119,10 @@ function init()
 
 function init1()
 {
-   /*setInterval(function(){
+   setInterval(function(){
         init()
-    },100);*/
-    init();
+    },100);
+    //init();
 }
 function distribution(idj, Case) // prototype permettant d'effectuer la distribution des pions par le joueur dont l'id est passé en paramettre
 {
@@ -149,71 +149,24 @@ function distribution(idj, Case) // prototype permettant d'effectuer la distribu
             var progressCase = Case;
             if(idj == 2)
             {
-                var debC = 1;
-
-                    xhttp.open("GET","insertEvol2_"+(progressCase-1)+".php?val="+tmp, true);
-                    xhttp.send();
-                
+                xhttp.open("GET","insertEvol2_"+(progressCase-1)+".php?val="+tmp, true);
+                xhttp.send();
             }
             else
             {
-                var debC = 7
-                while(tmp > 0)
-                {
-                    
-                    if(progressCase < 7)
-                    {
-                        document.getElementById("J"+idj+"pionsCase"+(progressCase+1)).value = eval(document.getElementById("J"+idj+"pionsCase"+(progressCase+1)).value + '+' + 1);
-                        document.getElementById("J"+idj+"pions"+(progressCase+1)).value =  document.getElementById("J"+idj+"pionsCase"+(progressCase+1)).value 
-                        progressCase += 1;
-                    }
-                    else
-                    {
-                        checkPrise1 = true
-                        document.getElementById("J"+idc+"pionsCase"+debC).value = eval(document.getElementById("J"+idc+"pionsCase"+debC).value + '+' + 1);
-                        document.getElementById("J"+idc+"pions"+debC).value = document.getElementById("J"+idc+"pionsCase"+debC).value
-                        debC -= 1;
-                        if(debC < 1)
-                        {
-                            var newInd = 1
-                            if(rappel <= 13)
-                            {
-                                while (tmp > 0)
-                                {
-                                    document.getElementById("J"+idj+"pionsCase"+newInd).value  = eval(document.getElementById("J"+idj+"pionsCase"+newInd).value  + '+' + 1);
-                                    document.getElementById("J"+idj+"pions"+newInd).value      = eval(document.getElementById("J"+idj+"pions"+newInd).value      + '+' + 1);
-                                    newInd += 1
-                                    tmp-=1
-                                }
-                            }
-                            else
-                            {
-                                debC = 1;
-                                while (tmp > 0)
-                                {
-                                    checkPrise1 = true
-                                    document.getElementById("J"+idc+"pionsCase"+debC).value = eval(document.getElementById("J"+idc+"pionsCase"+debC).value + '+' + 1);
-                                    document.getElementById("J"+idc+"pions"+debC).value = document.getElementById("J"+idc+"pionsCase"+debC).value   
-                                    debC += 1         
-                                }
-                            }
-
-                        }
-                    }
-                    tmp -= 1;
-                }
-                if(checkPrise1)
-                {
-                    prise((debC+1),idj,idc)
-                }
+                xhttp.open("GET","insertEvol1_"+(progressCase-1)+".php?val="+tmp, true);
+                xhttp.send();
             }
-            //init();
+        }
+        if((poursuiteJeu() == 1) || (poursuiteJeu() == 2))
+        {
+            alert("Fin de la partie, victoire du joueur "+poursuiteJeu())
         }
     }
    
 }
 
-function prise(lastCase,idj,idc)
+/*function prise(lastCase,idj,idc)
 {
     var avance = true
 
@@ -257,7 +210,7 @@ function prise(lastCase,idj,idc)
     {
         alert("Fin de la partie, victoire du joueur "+poursuiteJeu())
     }
-}
+}*/
 
 function poursuiteJeu()
 {
