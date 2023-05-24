@@ -1,5 +1,4 @@
-var permission1 = true // permission de jouer du joueur 1, il est donc le premier a jouer
-var permission2 = false // permission de jouer du joueur 2, il est donc le deuxieme a jouer
+var Gpermission; // Tableau Global contenant les permission des joueurs 1 (a l'index 0) et 2 (a l'index 1)
 
 class Songo
 {
@@ -25,22 +24,76 @@ class Songo
 
 function estBloque(idj)  // prototype permettant de savoir si le joueur dont l'id est passé en paramettre est bloqué en retournant 0 ou pas en retournant 1
 {
-    if((idj == 1) && (permission1))
+    var xhttp = new XMLHttpRequest();
+
+    xhttp.onreadystatechange = function(){
+        if(this.readyState == 4 && this.status == 200)
+            Gpermission = this.response;
+    };
+
+    xhttp.open('GET', 'status.php?val='+idj, false);
+    xhttp.send();
+
+
+    if((idj == 1) && (Gpermission == 1))
     {
-        permission1 = false
-        permission2 = true
+        xhttp.open('GET', 'changeStatus.php', true);
+        xhttp.send();
         return 0
     }
-    else if((idj == 1) && (!permission1))
+    else if((idj == 1) && (Gpermission == 0))
         return 1
-    else if((idj == 2) && (permission2))
+    else if((idj == 2) && (Gpermission == 1))
     {
-        permission1 = true
-        permission2 = false
+        xhttp.open('GET', 'changeStatus.php', true);
+        xhttp.send();
         return 0
     }
-    else if((idj == 2) && (!permission2))
+    else if((idj == 2) && (Gpermission == 0))
         return 1
+}
+
+function newPart()
+{
+    var xhttp = new XMLHttpRequest();
+
+    xhttp.open('GET', 'reset.php', true);
+    xhttp.send();
+}
+
+function menu()
+{
+    var xhttp = new XMLHttpRequest();
+
+    xhttp.open('GET', 'menu.php', true);
+    xhttp.send();
+}
+
+function nom1()
+{
+    var xhttp = new XMLHttpRequest();
+
+    xhttp.onreadystatechange = function(){
+        if(this.readyState == 4 && this.status == 200)
+            document.getElementById("nkw1").value = this.response;
+    }
+
+    xhttp.open('GET', 'nom.php?id=1', true);
+    xhttp.send();
+
+}
+
+function nom2()
+{
+    var xhttp = new XMLHttpRequest();
+
+    xhttp.onreadystatechange = function(){
+        if(this.readyState == 4 && this.status == 200)
+            document.getElementById("nkw2").value = this.response;
+    }
+
+    xhttp.open('GET', 'nom.php?id=2', true);
+    xhttp.send();
 }
 
 function affiche1(idj,idcase)
@@ -115,105 +168,92 @@ function init()
     affiche2(2,idcase2);
     score(1);
     score(2);
+    nom1();
+    nom2();
 }
 
-function init1()
+function refresh()
 {
-   setInterval(function(){
-        init()
-    },100);
+    setInterval(init, 100);
     //init();
 }
-function distribution(idj, Case) // prototype permettant d'effectuer la distribution des pions par le joueur dont l'id est passé en paramettre
+
+function allonsY()
 {
+    var xhttp = new XMLHttpRequest();
+    var accord;
 
-    if(estBloque(idj) == 0)
-    {
-        var xhttp = new XMLHttpRequest();
-        var tmp = document.getElementById("J"+idj+"pionsCase"+Case).value;
-        var rappel = tmp;
-        var checkPrise = false
-        var checkPrise1 = false
-        if((idj==1 && Case==7 && tmp==1) || (idj==2 && Case==1 && tmp==1))
-        {
-            alert("Vous ne pouvez pas jouer cette case !");
-        }
-        else
-        {
-            var idc; //id du joueur contraire
-            if(idj == 1)
-                idc = 2
-            else
-                idc = 1
-
-            var progressCase = Case;
-            if(idj == 2)
-            {
-                xhttp.open("GET","insertEvol2_"+(progressCase-1)+".php?val="+tmp, true);
-                xhttp.send();
-            }
-            else
-            {
-                xhttp.open("GET","insertEvol1_"+(progressCase-1)+".php?val="+tmp, true);
-                xhttp.send();
-            }
-        }
-        if((poursuiteJeu() == 1) || (poursuiteJeu() == 2))
-        {
-            alert("Fin de la partie, victoire du joueur "+poursuiteJeu())
-        }
+    xhttp.onreadystatechange = function(){
+        if(this.status==200 && this.readyState == 4)
+            accord =  this.response;
     }
-   
+    xhttp.open('GET', 'totaljoueur.php', false);
+    xhttp.send();
+
+    return accord;
 }
 
-/*function prise(lastCase,idj,idc)
+function distribution(idj, Case) // prototype permettant d'effectuer la distribution des pions par le joueur dont l'id est passé en paramettre
 {
-    var avance = true
-
-    if(idc == 1)
+    if(allonsY() == 1)
     {
-        for( i = lastCase; i >= 1; i--)
+        if(estBloque(idj) == 0)
         {
-            checkPions = document.getElementById("J"+idc+"pions"+i).value;
-            if((checkPions != 2) && (checkPions != 3) && (checkPions != 4))
+            document.getElementById("J"+idj+"pions"+Case).style = "background-color:#106fdb;";
+            setTimeout(function(){
+                document.getElementById("J"+idj+"pions"+Case).style = "background-color:#6f8683;";
+            },1000)
+            var xhttp = new XMLHttpRequest();
+            var tmp = document.getElementById("J"+idj+"pionsCase"+Case).value;
+            var rappel = tmp;
+            var checkPrise = false
+            var checkPrise1 = false
+            if((idj==1 && Case==7 && tmp==1) || (idj==2 && Case==1 && tmp==1))
             {
-                avance = false
+                alert("Vous ne pouvez pas jouer cette case !");
             }
-            if(avance)
-            {                
-                document.getElementById("PointJoueur"+idj).value = eval(document.getElementById("PointJoueur"+idj).value + '+' + checkPions)
-                document.getElementById("J"+idc+"pions"+i).value = 0
-                document.getElementById("J"+idc+"pionsCase"+i).value = 0
+            else
+            {
+                var idc; //id du joueur contraire
+                if(idj == 1)
+                    idc = 2
+                else
+                    idc = 1
+
+                var progressCase = Case;
+                if(idj == 2)
+                {
+                    xhttp.open("GET","insertEvol2_"+(progressCase-1)+".php?val="+tmp, true);
+                    xhttp.send();
+                }
+                else
+                {
+                    xhttp.open("GET","insertEvol1_"+(progressCase-1)+".php?val="+tmp, true);
+                    xhttp.send();
+                }
             }
-        
+            if((poursuiteJeu() == 1) || (poursuiteJeu() == 2))
+            {
+                alert("Fin de la partie, victoire du joueur "+poursuiteJeu())
+            }
         }
     }
     else
     {
-        for(var i = lastCase; i <= 7; i+=1)
-        {
-            checkPions = document.getElementById("J"+idc+"pions"+i).value;
-            if((checkPions != 2) && (checkPions != 3) && (checkPions != 4))
-            {
-                avance = false
-            }
-            if(avance)
-            {
-                document.getElementById("PointJoueur"+idj).value = eval(document.getElementById("PointJoueur"+idj).value + '+' + checkPions)
-                document.getElementById("J"+idc+"pions"+i).value = 0
-                document.getElementById("J"+idc+"pionsCase"+i).value = 0
-            }
+        document.getElementById("nkw2").style = "background-color:red";
+        setTimeout(function(){
+            document.getElementById("nkw2").style = "background-color:#a2f1a2;";
+        }, 1000);
+
+    }
         
-        }
-    }
-    if((poursuiteJeu() == 1) || (poursuiteJeu() == 2))
-    {
-        alert("Fin de la partie, victoire du joueur "+poursuiteJeu())
-    }
-}*/
+}
+
 
 function poursuiteJeu()
 {
+    var xhttp = new XMLHttpRequest();
+
     a = document.getElementById("PointJoueur1").value;
     b = document.getElementById("PointJoueur2").value;
 
@@ -229,10 +269,20 @@ function poursuiteJeu()
     if((som1 + som2) < 10)
     {
         if((som1 + a) > 35)
+        {
+            xhttp.open('GET', 'fin.php', true);
+            xhttp.send();
             return 1
+        }
+            
     
         if((som2 + b) > 35) 
+        {
+            xhttp.open('GET', 'fin.php', true);
+            xhttp.send();
             return 2
+        }
+            
     }
     
     if((a<=35) && (b<=35))
@@ -240,10 +290,20 @@ function poursuiteJeu()
 
     if(a>35 || b>35)
     {
-        permission1 = false
-        permission2 = false
+        xhttp.open('GET', 'fin.php', true);
+        xhttp.send();
         if(a>35)
-            return 1
-        return 2
+        {
+            xhttp.open('GET', 'fin.php', true);
+            xhttp.send();
+            return 1;
+        }
+        else
+        {
+            xhttp.open('GET', 'fin.php', true);
+            xhttp.send();
+            return 2
+        }
+        
     }
 }

@@ -35,6 +35,6 @@ input
 {
     background-color: #a2f1a2;
     font-size: 30px;
-    font-variant: small-caps;
+    /*font-variant: small-caps;*/
     border-radius: 9px;
 }
