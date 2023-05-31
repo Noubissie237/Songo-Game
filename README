@@ -1,0 +1,3 @@
+Afin que le jeu puisse fonctionner parfaitement, le premier et unique fichier à lancer ici doit être le fichier 'init.html'
+se trouvant dans le dossier 'INIT', faute de quoi le informations (Nom du joueur) ne seront pas entrer dans la
+base de donnée, et donc le jeu ne sera pas possible

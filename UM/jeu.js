@@ -25,7 +25,6 @@ class Songo
 
 function estBloque(idj)  // prototype permettant de savoir si le joueur dont l'id est passé en paramettre est bloqué en retournant 0 ou pas en retournant 1
 {
-    document.querySelector()
     if((idj == 1) && (permission1))
     {
         permission1 = false
@@ -70,6 +69,7 @@ function distribution(idj, Case) // prototype permettant d'effectuer la distribu
         {
             alert("Vous ne pouvez pas jouer cette case !");
         }
+        
         else
         {
             var idc; //id du joueur contraire
